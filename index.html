@@ -288,6 +288,14 @@
     border-radius:3px;
   }
   .frame-main .slide{ padding:14px; }
+  .initial-photo{
+    position:absolute; inset:10px;
+    width:calc(100% - 20px); height:calc(100% - 20px);
+    object-fit:cover; border-radius:3px; display:block;
+  }
+  .frame-main .initial-photo{
+    inset:14px; width:calc(100% - 28px); height:calc(100% - 28px);
+  }
 
   /* ambient photos floating around the whole site while scrolling */
   .ambient-photos{
@@ -440,9 +448,9 @@
 
   <section id="gallery-section">
     <div class="photo-cluster fade-up">
-      <div class="cycle-frame frame-side frame-left" id="frameLeft"></div>
-      <div class="cycle-frame frame-main" id="frameMain"></div>
-      <div class="cycle-frame frame-side frame-right" id="frameRight"></div>
+      <div class="cycle-frame frame-side frame-left" id="frameLeft"><img class="initial-photo" src="foto2.jpg" alt=""></div>
+      <div class="cycle-frame frame-main" id="frameMain"><img class="initial-photo" src="foto1.jpg" alt=""></div>
+      <div class="cycle-frame frame-side frame-right" id="frameRight"><img class="initial-photo" src="foto3.jpg" alt=""></div>
     </div>
     <div class="dots" id="stageDots"></div>
 
@@ -519,9 +527,29 @@
   }
 
   // ---------- fotos de la galería ----------
-  // Guarda foto1.jpg, foto2.jpg, etc. en la misma carpeta que este archivo HTML.
+  // Las fotos foto1.jpg a foto19.jpg deben estar en la misma carpeta que index.html.
   // Puedes agregar más líneas siguiendo el mismo formato.
-  const photoPool = Array.from({ length: 19 }, (_, i) => ({ number: i + 1 }));
+  const photoPool = [
+    { src: 'foto1.jpg' },
+    { src: 'foto2.jpg' },
+    { src: 'foto3.jpg' },
+    { src: 'foto4.jpg' },
+    { src: 'foto5.jpg' },
+    { src: 'foto6.jpg' },
+    { src: 'foto7.jpg' },
+    { src: 'foto8.jpg' },
+    { src: 'foto9.jpg' },
+    { src: 'foto10.jpg' },
+    { src: 'foto11.jpg' },
+    { src: 'foto12.jpg' },
+    { src: 'foto13.jpg' },
+    { src: 'foto14.jpg' },
+    { src: 'foto15.jpg' },
+    { src: 'foto16.jpg' },
+    { src: 'foto17.jpg' },
+    { src: 'foto18.jpg' },
+    { src: 'foto19.jpg' }
+  ];
 
   function randomSide(){
     return Math.random() < 0.5 ? -1 : 1; // -1 = izquierda, 1 = derecha
@@ -532,35 +560,26 @@
     el.className = 'slide';
 
     const img = document.createElement('img');
+    img.src = new URL(item.src, document.baseURI).href;
     img.alt = '';
     img.setAttribute('aria-hidden', 'true');
-
-    // Primero busca las fotos junto al index.html. También prueba variantes
-    // comunes para evitar problemas por extensión o por una carpeta antigua.
-    const n = item.number;
-    const candidates = [
-      `./foto${n}.jpg`,
-      `./foto${n}.jpeg`,
-      `./Foto${n}.jpg`,
-      `./Foto${n}.jpeg`,
-      `./fotos/foto${n}.jpg`,
-      `./fotos/foto${n}.jpeg`
-    ];
-    let candidateIndex = 0;
-
-    img.onerror = () => {
-      candidateIndex += 1;
-      if(candidateIndex < candidates.length){
-        img.src = candidates[candidateIndex];
-      } else {
-        el.remove();
-        console.warn(`No se encontró foto${n}.jpg ni ninguna variante compatible.`);
-      }
+    img.onload = () => {
+      containerInitialPhotosCleanup();
     };
-    img.src = candidates[candidateIndex];
+    img.onerror = () => {
+      console.error('No se pudo cargar:', img.src);
+      el.remove();
+    };
 
     el.appendChild(img);
     return el;
+  }
+
+  function containerInitialPhotosCleanup(){
+    document.querySelectorAll('.initial-photo').forEach(img => {
+      img.style.opacity = '0';
+      setTimeout(() => img.remove(), 500);
+    });
   }
 
   // arranca un ciclo independiente de apariciones/desapariciones al azar dentro de un contenedor
