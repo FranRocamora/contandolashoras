@@ -510,7 +510,10 @@
 
 <button class="sound-toggle" id="soundToggle" aria-label="Silenciar o activar la música" title="Silenciar / activar música">♪</button>
 
-<audio id="bgSong" loop preload="auto"><source src="cancion.mp3" type="audio/mpeg"></audio>
+<audio id="bgSong" loop preload="auto" playsinline>
+  <source src="./cancion.mp3" type="audio/mpeg">
+  Tu navegador no puede reproducir este audio.
+</audio>
 
 <script>
   // ---------- floating hearts background ----------
@@ -656,22 +659,54 @@
   revealEls.forEach(el=>io.observe(el));
 
   // ---------- música desde archivo local separado ----------
-  // "Dios me oyó" - Beéle / Marc Anthony
-  let songMuted = false;
   const bgSong = document.getElementById('bgSong');
+  const soundToggle = document.getElementById('soundToggle');
+  let songMuted = false;
+
   bgSong.volume = 0.85;
 
-  function playSong(){
-    bgSong.muted = false;
-    bgSong.play().catch(()=>{
-      // si el navegador lo bloquea, se reintenta apenas haya otra interacción
-      document.addEventListener('click', ()=> bgSong.play(), { once:true });
-    });
+  function updateSoundButton(){
+    if(bgSong.paused){
+      soundToggle.textContent = '▶';
+      soundToggle.title = 'Reproducir música';
+      soundToggle.setAttribute('aria-label', 'Reproducir música');
+    }else if(bgSong.muted){
+      soundToggle.textContent = '✕';
+      soundToggle.title = 'Activar música';
+      soundToggle.setAttribute('aria-label', 'Activar música');
+    }else{
+      soundToggle.textContent = '♪';
+      soundToggle.title = 'Silenciar música';
+      soundToggle.setAttribute('aria-label', 'Silenciar música');
+    }
   }
 
-  function toggleSongMute(){
+  async function playSong(){
+    songMuted = false;
+    bgSong.muted = false;
+    bgSong.volume = 0.85;
+
+    try{
+      await bgSong.play();
+      updateSoundButton();
+      return true;
+    }catch(error){
+      // Algunos navegadores bloquean el primer intento. El botón ▶ permite iniciarla manualmente.
+      console.warn('El navegador bloqueó el inicio automático de la música:', error);
+      updateSoundButton();
+      return false;
+    }
+  }
+
+  async function controlSong(){
+    if(bgSong.paused){
+      await playSong();
+      return;
+    }
+
     songMuted = !songMuted;
     bgSong.muted = songMuted;
+    updateSoundButton();
   }
 
   function startExperience(){
@@ -682,19 +717,35 @@
   const envelope = document.getElementById('envelope');
   function openEnvelope(){
     if(envelope.classList.contains('open')) return;
+
+    // Este llamado ocurre directamente dentro del toque/clic del usuario,
+    // que es lo que exigen Chrome, Safari y los teléfonos para reproducir audio.
+    playSong();
     envelope.classList.add('open');
-    playSong(); // se dispara dentro del propio clic
     setTimeout(startExperience, 950);
   }
+
   envelope.addEventListener('click', openEnvelope);
   envelope.addEventListener('keydown', (e)=>{
-    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openEnvelope(); }
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      openEnvelope();
+    }
   });
 
-  document.getElementById('soundToggle').addEventListener('click', ()=>{
-    toggleSongMute();
-    document.getElementById('soundToggle').textContent = songMuted ? '✕' : '♪';
+  soundToggle.addEventListener('click', controlSong);
+  bgSong.addEventListener('play', updateSoundButton);
+  bgSong.addEventListener('pause', updateSoundButton);
+  bgSong.addEventListener('volumechange', updateSoundButton);
+  bgSong.addEventListener('ended', updateSoundButton);
+  bgSong.addEventListener('error', ()=>{
+    soundToggle.textContent = '!';
+    soundToggle.title = 'No se encontró cancion.mp3';
+    soundToggle.setAttribute('aria-label', 'No se encontró cancion.mp3');
   });
+
+  // Empieza mostrando ▶ hasta que el usuario abra el sobre.
+  updateSoundButton();
 </script>
 
 </body>
