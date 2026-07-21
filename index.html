@@ -400,8 +400,269 @@
     transition:transform 0.2s ease;
   }
   .sound-toggle:hover{ transform:scale(1.08); }
-  .sound-toggle:focus-visible, .envelope:focus-visible{
+  .sound-toggle:focus-visible, .envelope:focus-visible,
+  .journey-button:focus-visible{
     outline:2px solid var(--gold); outline-offset:3px;
+  }
+
+  /* ---------- sorpresa del viaje / countdown ---------- */
+  .journey-surprise{
+    text-align:center;
+    padding:0 0 120px;
+  }
+  .journey-button{
+    appearance:none;
+    border:1px solid rgba(201,161,94,0.65);
+    background:linear-gradient(135deg, var(--burgundy), var(--plum));
+    color:var(--blush-white);
+    border-radius:999px;
+    padding:15px 28px;
+    font-family:'Jost', sans-serif;
+    font-size:0.9rem;
+    font-weight:400;
+    letter-spacing:0.08em;
+    cursor:pointer;
+    box-shadow:0 18px 35px -16px rgba(61,31,43,0.65);
+    transition:transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+  }
+  .journey-button:hover{
+    transform:translateY(-3px);
+    box-shadow:0 22px 42px -16px rgba(61,31,43,0.75);
+  }
+  .journey-button .plane-small{
+    display:inline-block;
+    margin-left:8px;
+    transform:rotate(-8deg);
+  }
+  .journey-panel{
+    max-width:760px;
+    margin:34px auto 0;
+    padding:0;
+    display:grid;
+    grid-template-rows:0fr;
+    opacity:0;
+    transform:translateY(20px);
+    transition:grid-template-rows 0.9s ease, opacity 0.7s ease, transform 0.8s ease;
+  }
+  .journey-panel.open{
+    grid-template-rows:1fr;
+    opacity:1;
+    transform:translateY(0);
+  }
+  .journey-panel-inner{
+    min-height:0;
+    overflow:hidden;
+  }
+  .journey-card{
+    background:rgba(255,248,245,0.92);
+    border:1px solid rgba(201,161,94,0.3);
+    border-radius:18px;
+    padding:34px 28px 28px;
+    box-shadow:var(--shadow-soft);
+    backdrop-filter:blur(8px);
+  }
+  .journey-kicker{
+    color:var(--gold);
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    font-size:0.68rem;
+    margin:0 0 9px;
+  }
+  .journey-card h2{
+    color:var(--burgundy);
+    font-size:clamp(2rem, 5vw, 3rem);
+    font-style:italic;
+    line-height:1.1;
+  }
+  .journey-date{
+    margin:10px 0 26px;
+    color:var(--plum);
+    opacity:0.72;
+    font-size:0.95rem;
+  }
+  .countdown{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+    gap:12px;
+    margin-bottom:34px;
+  }
+  .countdown-unit{
+    background:var(--ivory);
+    border:1px solid rgba(107,39,55,0.1);
+    border-radius:12px;
+    padding:16px 8px 13px;
+  }
+  .countdown-number{
+    display:block;
+    font-family:'Cormorant Garamond', serif;
+    color:var(--burgundy);
+    font-size:clamp(1.8rem, 5vw, 2.7rem);
+    font-weight:600;
+    line-height:1;
+    font-variant-numeric:tabular-nums;
+  }
+  .countdown-label{
+    display:block;
+    margin-top:7px;
+    color:var(--plum);
+    opacity:0.65;
+    font-size:0.65rem;
+    letter-spacing:0.13em;
+    text-transform:uppercase;
+  }
+  .countdown-finished{
+    display:none;
+    font-family:'Parisienne', cursive;
+    color:var(--burgundy);
+    font-size:2rem;
+    margin:0 0 30px;
+  }
+  .flight-map{
+    position:relative;
+    border-radius:14px;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 18% 23%, rgba(217,165,174,0.22), transparent 25%),
+      radial-gradient(circle at 82% 77%, rgba(201,161,94,0.18), transparent 28%),
+      linear-gradient(155deg, #fffaf7, #f8e9e3);
+    border:1px solid rgba(107,39,55,0.1);
+  }
+  .flight-map svg{
+    display:block;
+    width:100%;
+    height:auto;
+  }
+  .map-grid line{
+    stroke:rgba(107,39,55,0.06);
+    stroke-width:1;
+  }
+  .land-shape{
+    fill:rgba(217,165,174,0.23);
+    stroke:rgba(107,39,55,0.13);
+    stroke-width:1.5;
+  }
+  .flight-route-base{
+    fill:none;
+    stroke:rgba(107,39,55,0.16);
+    stroke-width:4;
+    stroke-linecap:round;
+  }
+  .flight-route{
+    fill:none;
+    stroke:var(--gold);
+    stroke-width:3;
+    stroke-linecap:round;
+    stroke-dasharray:9 10;
+    animation:routeFlow 1.4s linear infinite;
+  }
+  @keyframes routeFlow{
+    to{ stroke-dashoffset:-38; }
+  }
+  .city-dot{
+    fill:var(--burgundy);
+    stroke:var(--blush-white);
+    stroke-width:4;
+  }
+  .city-label{
+    fill:var(--plum);
+    font-family:'Jost', sans-serif;
+    font-size:14px;
+    font-weight:500;
+    letter-spacing:0.04em;
+  }
+  .city-sub{
+    fill:rgba(61,31,43,0.58);
+    font-family:'Jost', sans-serif;
+    font-size:10px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+  }
+  .plane-group{
+    filter:drop-shadow(0 8px 7px rgba(61,31,43,0.28));
+  }
+  .plane-model{
+    transform-box:fill-box;
+    transform-origin:center;
+    animation:planeGlide 2.2s ease-in-out infinite;
+  }
+  .aircraft-shadow{
+    fill:rgba(61,31,43,0.14);
+    filter:blur(2px);
+  }
+  .aircraft-contrail{
+    fill:none;
+    stroke:rgba(201,161,94,0.48);
+    stroke-width:2;
+    stroke-linecap:round;
+    stroke-dasharray:13 7;
+    animation:contrailMove 1.2s linear infinite;
+  }
+  .aircraft-wing{
+    fill:url(#aircraftWingGradient);
+    stroke:var(--burgundy);
+    stroke-width:1.25;
+    stroke-linejoin:round;
+  }
+  .aircraft-tail{
+    fill:var(--rose-dust);
+    stroke:var(--burgundy);
+    stroke-width:1.15;
+    stroke-linejoin:round;
+  }
+  .aircraft-body{
+    fill:url(#aircraftBodyGradient);
+    stroke:var(--burgundy);
+    stroke-width:1.55;
+    stroke-linejoin:round;
+  }
+  .aircraft-centerline{
+    fill:none;
+    stroke:var(--gold);
+    stroke-width:1.45;
+    stroke-linecap:round;
+    opacity:0.95;
+  }
+  .aircraft-cockpit{
+    fill:var(--plum);
+    opacity:0.92;
+  }
+  .aircraft-window{
+    fill:var(--burgundy);
+    opacity:0.7;
+  }
+  .aircraft-engine{
+    fill:var(--burgundy);
+    stroke:var(--blush-white);
+    stroke-width:0.9;
+  }
+  .aircraft-tip{
+    fill:var(--gold);
+  }
+  @keyframes planeGlide{
+    0%,100%{ transform:translateY(-1px) scale(1); }
+    50%{ transform:translateY(1.5px) scale(1.025); }
+  }
+  @keyframes contrailMove{
+    to{ stroke-dashoffset:-20; }
+  }
+  .route-caption{
+    margin:18px 0 0;
+    color:var(--plum);
+    opacity:0.78;
+    font-size:0.92rem;
+    line-height:1.7;
+  }
+  .route-caption .script{
+    color:var(--rose-dust);
+    font-size:1.35rem;
+  }
+
+  @media (max-width:560px){
+    .journey-card{ padding:28px 14px 22px; }
+    .countdown{ gap:7px; }
+    .countdown-unit{ padding:13px 4px 11px; }
+    .city-label{ font-size:12px; }
+    .city-sub{ font-size:8px; }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -504,6 +765,132 @@
     <p class="fade-up">Esto es solo un pedacito de todo lo que siento. Falta lo más importante:
       seguir construyendo, juntos, todo lo que viene.</p>
     <p class="signature fade-up">con todo mi amor, Cochi</p>
+  </section>
+
+  <!-- ================= SORPRESA DEL VIAJE ================= -->
+  <section class="journey-surprise fade-up" id="journeySurprise">
+    <button class="journey-button" id="journeyButton" type="button" aria-expanded="false" aria-controls="journeyPanel">
+      Descubre cuánto falta para nuestro reencuentro <span class="plane-small">✈</span>
+    </button>
+
+    <div class="journey-panel" id="journeyPanel" aria-hidden="true">
+      <div class="journey-panel-inner">
+        <div class="journey-card">
+          <p class="journey-kicker">cada segundo nos acerca</p>
+          <h2>Próxima parada: tú</h2>
+          <p class="journey-date">Domingo, 26 de julio de 2026 · Miami → Venezuela<br><strong>Llegada estimada: 3:00 p. m.</strong></p>
+
+          <div class="countdown" id="countdown" aria-live="polite">
+            <div class="countdown-unit">
+              <span class="countdown-number" id="countDays">00</span>
+              <span class="countdown-label">días</span>
+            </div>
+            <div class="countdown-unit">
+              <span class="countdown-number" id="countHours">00</span>
+              <span class="countdown-label">horas</span>
+            </div>
+            <div class="countdown-unit">
+              <span class="countdown-number" id="countMinutes">00</span>
+              <span class="countdown-label">minutos</span>
+            </div>
+            <div class="countdown-unit">
+              <span class="countdown-number" id="countSeconds">00</span>
+              <span class="countdown-label">segundos</span>
+            </div>
+          </div>
+          <p class="countdown-finished" id="countdownFinished">Ya llegué a Venezuela. Nuestro reencuentro comienza ahora ♥</p>
+
+          <div class="flight-map" aria-label="Trayecto animado de Miami a Venezuela">
+            <svg viewBox="0 0 720 330" role="img" aria-labelledby="flightMapTitle flightMapDesc">
+              <title id="flightMapTitle">Ruta de Miami a Venezuela</title>
+              <desc id="flightMapDesc">Un avión comercial elegante recorre una ruta curva desde Miami hasta Venezuela.</desc>
+
+              <defs aria-hidden="true">
+                <linearGradient id="aircraftBodyGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#ffffff"></stop>
+                  <stop offset="55%" stop-color="#fff8f5"></stop>
+                  <stop offset="100%" stop-color="#ead7d1"></stop>
+                </linearGradient>
+                <linearGradient id="aircraftWingGradient" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#fff8f5"></stop>
+                  <stop offset="100%" stop-color="#e8c7c9"></stop>
+                </linearGradient>
+              </defs>
+
+              <g class="map-grid" aria-hidden="true">
+                <line x1="0" y1="82" x2="720" y2="82"></line>
+                <line x1="0" y1="165" x2="720" y2="165"></line>
+                <line x1="0" y1="248" x2="720" y2="248"></line>
+                <line x1="144" y1="0" x2="144" y2="330"></line>
+                <line x1="288" y1="0" x2="288" y2="330"></line>
+                <line x1="432" y1="0" x2="432" y2="330"></line>
+                <line x1="576" y1="0" x2="576" y2="330"></line>
+              </g>
+
+              <!-- Siluetas decorativas para sugerir Florida, el Caribe y el norte de Sudamérica -->
+              <path class="land-shape" d="M65 0H226c-12 28-26 48-48 65-15 12-27 33-27 55 0 22-9 43-29 54-13 7-29 5-39-5-13-13-13-34-4-50 14-24 16-50 4-76C78 31 70 17 65 0Z"></path>
+              <path class="land-shape" d="M468 276c35-20 72-30 111-31 45-2 92 9 141 33v52H438c5-23 15-41 30-54Z"></path>
+              <ellipse class="land-shape" cx="318" cy="181" rx="17" ry="6" transform="rotate(-13 318 181)"></ellipse>
+              <ellipse class="land-shape" cx="370" cy="202" rx="13" ry="5" transform="rotate(8 370 202)"></ellipse>
+              <ellipse class="land-shape" cx="420" cy="218" rx="11" ry="4" transform="rotate(-8 420 218)"></ellipse>
+
+              <path id="flightPath" class="flight-route-base" d="M165 104 C280 85, 388 132, 548 260"></path>
+              <path class="flight-route" d="M165 104 C280 85, 388 132, 548 260"></path>
+
+              <circle class="city-dot" cx="165" cy="104" r="8"></circle>
+              <text class="city-label" x="124" y="78">Miami</text>
+              <text class="city-sub" x="112" y="93">punto de partida</text>
+
+              <circle class="city-dot" cx="548" cy="260" r="8"></circle>
+              <text class="city-label" x="566" y="254">Venezuela</text>
+              <text class="city-sub" x="566" y="270">nuestro destino</text>
+
+              <g class="plane-group" id="animatedPlane">
+                <g class="plane-model">
+                  <!-- Estela breve y elegante -->
+                  <path class="aircraft-contrail" d="M-70 0 H-43"></path>
+                  <ellipse class="aircraft-shadow" cx="2" cy="5" rx="42" ry="10"></ellipse>
+
+                  <!-- Alas principales, más amplias y proporcionadas -->
+                  <path class="aircraft-wing" d="M-5 -4 L-14 -35 Q-14.5 -39 -10.5 -37.5 L22 -6 L22 -3 Z"></path>
+                  <path class="aircraft-wing" d="M-5 4 L-14 35 Q-14.5 39 -10.5 37.5 L22 6 L22 3 Z"></path>
+
+                  <!-- Cola del avión -->
+                  <path class="aircraft-tail" d="M-28 -4 L-36 -18 Q-37 -21 -33 -19.5 L-16 -5 Z"></path>
+                  <path class="aircraft-tail" d="M-28 4 L-36 18 Q-37 21 -33 19.5 L-16 5 Z"></path>
+
+                  <!-- Fuselaje de jet comercial -->
+                  <path class="aircraft-body" d="M-39 0 L-34 -4.2 C-20 -5.6 2 -6.4 22 -5.1 C33 -4.4 42 -2.4 49 0 C42 2.4 33 4.4 22 5.1 C2 6.4 -20 5.6 -34 4.2 Z"></path>
+                  <path class="aircraft-centerline" d="M-29 0 H36"></path>
+
+                  <!-- Motores -->
+                  <ellipse class="aircraft-engine" cx="4" cy="-15" rx="5.2" ry="3.1"></ellipse>
+                  <ellipse class="aircraft-engine" cx="4" cy="15" rx="5.2" ry="3.1"></ellipse>
+
+                  <!-- Cabina y ventanillas -->
+                  <path class="aircraft-cockpit" d="M34 -2.8 C40 -2.1 44 -1 47 0 C44 1 40 2.1 34 2.8 C36 1.1 36 -1.1 34 -2.8Z"></path>
+                  <circle class="aircraft-window" cx="23" cy="0" r="1.25"></circle>
+                  <circle class="aircraft-window" cx="18" cy="0" r="1.25"></circle>
+                  <circle class="aircraft-window" cx="13" cy="0" r="1.25"></circle>
+                  <circle class="aircraft-window" cx="8" cy="0" r="1.25"></circle>
+                  <circle class="aircraft-window" cx="3" cy="0" r="1.25"></circle>
+
+                  <!-- Detalles dorados en las puntas -->
+                  <circle class="aircraft-tip" cx="-11" cy="-36" r="1.8"></circle>
+                  <circle class="aircraft-tip" cx="-11" cy="36" r="1.8"></circle>
+                </g>
+                <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.04;.94;1" dur="8.8s" repeatCount="indefinite"></animate>
+                <animateMotion dur="8.8s" repeatCount="indefinite" rotate="auto" keyPoints="0;0.03;0.97;1" keyTimes="0;.05;.93;1" calcMode="spline" keySplines=".22 .61 .36 1;.42 0 .58 1;.22 .61 .36 1">
+                  <mpath href="#flightPath"></mpath>
+                </animateMotion>
+              </g>
+            </svg>
+          </div>
+
+          <p class="route-caption">De Miami hasta Venezuela, cada kilómetro tendrá un solo propósito:<br><span class="script">volver a estar contigo.</span></p>
+        </div>
+      </div>
+    </div>
   </section>
 
 </main>
@@ -743,6 +1130,62 @@
     soundToggle.title = 'No se encontró cancion.mp3';
     soundToggle.setAttribute('aria-label', 'No se encontró cancion.mp3');
   });
+
+  // ---------- sorpresa del viaje y contador regresivo ----------
+  const journeyButton = document.getElementById('journeyButton');
+  const journeyPanel = document.getElementById('journeyPanel');
+  const countdown = document.getElementById('countdown');
+  const countdownFinished = document.getElementById('countdownFinished');
+  const countDays = document.getElementById('countDays');
+  const countHours = document.getElementById('countHours');
+  const countMinutes = document.getElementById('countMinutes');
+  const countSeconds = document.getElementById('countSeconds');
+
+  // Cuenta hasta la llegada a Venezuela: domingo 26 de julio de 2026 a las 3:00 p. m.
+  // Miami y Venezuela comparten UTC-4 en esta fecha, así que el contador marca la llegada exacta.
+  const tripDate = new Date('2026-07-26T15:00:00-04:00');
+
+  function twoDigits(value){
+    return String(value).padStart(2, '0');
+  }
+
+  function updateCountdown(){
+    const remaining = tripDate.getTime() - Date.now();
+
+    if(remaining <= 0){
+      countdown.style.display = 'none';
+      countdownFinished.style.display = 'block';
+      return;
+    }
+
+    const totalSeconds = Math.floor(remaining / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    countDays.textContent = twoDigits(days);
+    countHours.textContent = twoDigits(hours);
+    countMinutes.textContent = twoDigits(minutes);
+    countSeconds.textContent = twoDigits(seconds);
+  }
+
+  journeyButton.addEventListener('click', ()=>{
+    const isOpen = journeyPanel.classList.toggle('open');
+    journeyButton.setAttribute('aria-expanded', String(isOpen));
+    journeyPanel.setAttribute('aria-hidden', String(!isOpen));
+    journeyButton.innerHTML = isOpen
+      ? 'Ocultar nuestra ruta <span class="plane-small">✈</span>'
+      : 'Descubre cuánto falta para nuestro reencuentro <span class="plane-small">✈</span>';
+
+    if(isOpen){
+      updateCountdown();
+      setTimeout(()=> journeyPanel.scrollIntoView({ behavior:'smooth', block:'center' }), 250);
+    }
+  });
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
 
   // Empieza mostrando ▶ hasta que el usuario abra el sobre.
   updateSoundButton();
